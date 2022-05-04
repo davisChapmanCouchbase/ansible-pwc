@@ -1,0 +1,6 @@
+#this play pings nodes in the cluster
+---
+  - name: Pinging Couchbase Nodes
+    action: ping
+    register: ping_response
+

@@ -1,0 +1,9 @@
+#create the buckets in the cluster
+---
+  - hosts: master-host
+    become: true
+
+    tasks:
+      - name: Play to loop over buckets and include the bucket config REST API call
+        include_tasks: includes/bucket-tasks.yml
+        loop: "{{couchbase_cluster.buckets}}"

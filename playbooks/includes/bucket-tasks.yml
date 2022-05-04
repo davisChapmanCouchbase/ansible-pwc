@@ -1,0 +1,14 @@
+# this is an included file in the initialization of the couchbase cluster
+# this file is included within a "loop", so pay close attention to the variabled name {{item}} in this play. It is created by the calling play and used here 
+---      
+    - name: Included File with  Bucket Configuration for  - "{{item.name}}" 
+      command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default/buckets \
+          -d conflictResolutionType={{item.conflict_resolution}} \
+          -d flushEnabled={{item.flush_enabled}} \
+          -d threadsNumber={{item.threads}} \
+          -d replicaNumber={{item.num_replicas}} \
+          -d evictionPolicy={{item.eviction_policy}} \
+          -d ramQuotaMB={{item.mem_quota}} \
+          -d bucketType={{item.type}} \
+          -d name={{item.name}}

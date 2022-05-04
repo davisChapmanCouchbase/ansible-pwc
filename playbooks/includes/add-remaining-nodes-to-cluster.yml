@@ -1,0 +1,19 @@
+#set up the other  data nodes in the cluster
+---
+
+     - name: Initialize This  Node In Cluster
+       command: >-
+         curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST \
+         "{{couchbase_cluster.security.http_protocol}}://{{item}}:{{couchbase_cluster.security.port}}"/nodes/self/controller/settings \
+         -d 'path={{couchbase_cluster.paths.data}}&' \
+         -d 'index_path={{couchbase_cluster.paths.index}}&' \
+         -d 'cbas_path={{couchbase_cluster.paths.analytics}}&' \
+         -d 'eventing_path={{couchbase_cluster.paths.eventing}}&'
+
+     - name: Add Node to Cluster within an ansible loop using
+       command: curl -v -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" \
+         http://{{hostvars[inventory_hostname].groups['master-host'][0]}}:"{{couchbase_cluster.security.port}}"/controller/addNode \
+          -d 'hostname=http://{{item}}' \
+          -d 'user={{couchbase_cluster.security.admin_user}}' \
+          -d 'password={{couchbase_cluster.security.admin_pwd}}' \
+          -d 'services={{hostvars[item].services}}'

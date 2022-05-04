@@ -1,0 +1,324 @@
+{
+	"indexes": [
+		{
+			"definition": "CREATE INDEX `IdxEngBaseAsset` ON `concourse_qa`(`_type`,`graphicImg`,`description`,`thumbnailImg`,`associationId`,`uri`,`name`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "IdxEngBaseAsset",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_actionType_type` ON `cache_qa2`(`actionType`) WHERE (`_type` = \"archetypeActionCache\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_actionType_type",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `adv_associationId_type` ON `concourse_qa`(`associationId`,`_type`,`uri`,`name`,`description`,`parentEngModuleIds`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_associationId_type",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_engagementAttachmentId_type` ON `concourse_qa`(`engagementAttachmentId`,`associationId`) WHERE (`_type` = \"engAttachmentActionJoin\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_engagementAttachmentId_type",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_lookupEngPosition_type` ON `concourse_qa`(`lookupEngPosition`) WHERE (`_type` = \"userEngagement\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_lookupEngPosition_type",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_timestamp` ON `audit_logs_qa`(`timestamp`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_timestamp",
+			"bucket": "audit_logs_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_type_associationId_uri_name_graphicImg_description_thumbnailImg` ON `concourse_qa`(`_type`,`associationId`,`uri`,`name`,`graphicImg`,`description`,`thumbnailImg`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_type_associationId_uri_name_graphicImg_description_thumbnailImg",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_type_audit` ON `concourse_qa`(`_type`,(meta().`id`),`audit`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_type_audit",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_type_like_uri` ON `concourse_qa`(`_type`,`uri`) WHERE ((`_type` = \"module\") or (`_type` = \"utility\")) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_type_like_uri",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `adv_type_sessionToken` ON `cache_qa2`(`_type`,`sessionToken`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "adv_type_sessionToken",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `engagementUtilityByAssociationId` ON `concourse_qa`(`associationId`) WHERE (`_type` = `engagementUtility`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "engagementUtilityByAssociationId",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxActionCacheArchetype` ON `cache_qa2`(`archetypeId`,`actionType`,`path`,`intSolId`,`name`) WHERE (`_type` = \"archetypeActionCache\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxActionCacheArchetype",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxActionCacheEngagement` ON `cache_qa2`(`engagementId`,`actionType`,`path`,`intSolId`,`name`) WHERE (`_type` = \"engagementActionCache\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxActionCacheEngagement",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxActionCacheEngagementId` ON `cache_qa2`(`engagementId`,`actionType`,`path`,`intSolId`,`name`) WHERE (`_type` = \"engagementActionCache\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxActionCacheEngagementId",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxActionCacheGeneric` ON `cache_qa2`(`engagementId`,`archetypeId`,`actionType`,`path`,`intSolId`,`name`,`_type`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxActionCacheGeneric",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllEngUtilities` ON `concourse_qa`((split(`associationId`, \":\")[0]),`associationId`,`name`,`graphicImg`,`description`,`baseAssetId`,`uri`) WHERE (`_type` = \"engagementUtility\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllEngUtilities",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllModuleOfAnEng` ON `concourse_qa`((split(`associationId`, \":\")[0]),`associationId`,`name`,`graphicImg`,`description`,`baseAssetId`,`uri`) WHERE (`_type` = \"engagementModule\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllModuleOfAnEng",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllModuleOfAnEngAction` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`associationId`,`name`,`graphicImg`,`description`,`baseAssetId`,`uri`) WHERE ((`_type` = \"engagementModule\") and ((split(`associationId`, \":\")[1]) is not null)) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllModuleOfAnEngAction",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllModuleShortOfAnEngAction` ON `concourse_qa`(`associationId`,`name`,`graphicImg`,`description`,`thumbnailImg`,`uri`) WHERE (`_type` = \"engagementModule\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllModuleShortOfAnEngAction",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllUtilityOfAnEng` ON `concourse_qa`((split(`associationId`, \":\")[0]),`associationId`,`name`,`graphicImg`,`description`,`baseAssetId`,`uri`) WHERE (`_type` = \"engagementUtility\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllUtilityOfAnEng",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllUtilityOfAnEngAction` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`associationId`,`name`,`graphicImg`,`description`,`baseAssetId`,`uri`) WHERE ((`_type` = \"engagementUtility\") and ((split(`associationId`, \":\")[1]) is not null)) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllUtilityOfAnEngAction",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAllUtilityShortOfAnEngAction` ON `concourse_qa`(`associationId`,`graphicImg`,`description`,`thumbnailImg`,`parentEngModuleIds`,`uri`,`name`) WHERE (`_type` = \"engagementUtility\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAllUtilityShortOfAnEngAction",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxArchAccelerators` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`acceleratorIds`) end)),`name`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxArchAccelerators",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxArchAutomations` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`automationIds`) end)),`name`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxArchAutomations",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxArchByIntSol` ON `concourse_qa`(`intSolId`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxArchByIntSol",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxArchByName` ON `concourse_qa`(`name`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxArchByName",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxArchTemplates` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`templateIds`) end)),`name`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxArchTemplates",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAsset` ON `concourse_qa`(`_type`,`name`,`lookupDigitalAssetStatus`,`description`,`uri`) WHERE (`_type` in [\"accelerator\", \"template\", \"automation\"]) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAsset",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAuditByEngagement` ON `audit_logs_qa`(`engagementId`,`timestamp` DESC) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAuditByEngagement",
+			"bucket": "audit_logs_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAuditByEngagementAction` ON `audit_logs_qa`(`engagementActionId`,`timestamp` DESC) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAuditByEngagementAction",
+			"bucket": "audit_logs_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxAuditByUser` ON `audit_logs_qa`(`userId`,`timestamp` DESC) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxAuditByUser",
+			"bucket": "audit_logs_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxBxtAction` ON `concourse_qa`(`_type`,`name`,`description`,`seqNum`,`parentBxtActionId`,`bxtCode`,array_length(split((meta().`id`), \".\"))) WHERE (`_type` = \"bxtAction\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxBxtAction",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxDeployedArchByIntSol` ON `concourse_qa`(`lookupArchetypeStatus`,`intSolId`,`name`,`archetypeActions`) WHERE (`_type` = \"archetype\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxDeployedArchByIntSol",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngAccelerator` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`name`,`description`,`associationId`,`uri`,`baseAssetId`) WHERE (`_type` = \"engagementAccelerator\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngAccelerator",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngAssets` ON `concourse_qa`(`associationId`,`name`,`description`,`uri`,`lookupFileStatus`,`lookupFileSource`,`assetGuid`,`isMapFile`,`_type`,`baseAssetId`) WHERE (`_type` in [\"engagementAccelerator\", \"engagementTemplate\", \"engagementAutomation\", \"engagementAttachment\"]) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngAssets",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngAssetsIsGoldenAsset` ON `concourse_qa`(`_type`,`isGoldenAsset`,`baseAssetId`) WHERE (`_type` in [\"engagementAutomation\", \"engagementAccelerator\", \"engagementTemplate\", \"engagementModule\", \"engagementUtility\"]) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngAssetsIsGoldenAsset",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngAttachment` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`name`,`description`,`associationId`,`uri`,`lookupFileStatus`,`lookupFileSource`,`assetGuid`,`isMapFile`) WHERE (`_type` = \"engagementAttachment\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngAttachment",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngAutomation` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`name`,`description`,`associationId`,`uri`,`baseAssetId`) WHERE (`_type` = \"engagementAutomation\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngAutomation",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngByProjectID` ON `concourse_qa`((`projectMgmtSysData`.`projectId`)) WHERE (`_type` = \"engagement\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngByProjectID",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngModule` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`name`,`description`,`associationId`,`uri`,`baseAssetId`,`graphicImg`,`thumbnailImg`) WHERE ((`_type` = \"engagementModule\") and ((split(`associationId`, \":\")[1]) is not null)) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngModule",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngReports` ON `concourse_qa`(`engagement_id`) WHERE (`_type` = \"report\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngReports",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngSaveIt` ON `concourse_qa`(((`integrations`.`saveIt`).`guid`)) WHERE (`_type` = \"engagement\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngSaveIt",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngTemplate` ON `concourse_qa`((split(`associationId`, \":\")[0]),(split(`associationId`, \":\")[1]),`name`,`description`,`associationId`,`uri`,`baseAssetId`) WHERE (`_type` = \"engagementTemplate\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngTemplate",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngagementAttachment` ON `concourse_qa`(`engagementId`,`name`) WHERE (`_type` = \"engagementAttachment\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngagementAttachment",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxEngagementAttachmentId` ON `concourse_qa`(`engagementAttachmentId`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxEngagementAttachmentId",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxIntSol` ON `concourse_qa`(`_type`,`name`) WHERE (`_type` = \"intSol\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxIntSol",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxIntSolAccelerators` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`acceleratorIds`) end)),`name`) WHERE (`_type` = \"intSol\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxIntSolAccelerators",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxIntSolAutomations` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`automationIds`) end)),`name`) WHERE (`_type` = \"intSol\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxIntSolAutomations",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxIntSolTemplates` ON `concourse_qa`((distinct (array `x` for `x` in (`digitalAssets`.`templateIds`) end)),`name`) WHERE (`_type` = \"intSol\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxIntSolTemplates",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxIssueByEngId` ON `concourse_qa`(`engagementId`,`workstreamId`,`lookupIssueStatus`) WHERE (`_type` = \"issue\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxIssueByEngId",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxModUtilLib` ON `concourse_qa`(`_type`,`uri`,`name`,`graphicImg`,`description`,`thumbnailImg`,`lookupDigitalAssetStatus`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxModUtilLib",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxRiskByEngId` ON `concourse_qa`(`engagementId`,`workstreamId`,`lookupIssueStatus`) WHERE (`_type` = \"risk\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxRiskByEngId",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxStageCacheArchetype` ON `cache_qa2`(`archetypeId`,`intSolId`,`name`) WHERE (`_type` = \"archetypeStageCache\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxStageCacheArchetype",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxUserEngbyEngType` ON `concourse_qa`(`engagementId`,`userId`,`lookupEngPosition`,`type`) WHERE (`_type` = \"userEngagement\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxUserEngbyEngType",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxUserEngbyUsr` ON `concourse_qa`(`userId`,`engagementId`,`lookupEngPosition`,`lastAccessedDate`) WHERE (`_type` = \"userEngagement\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxUserEngbyUsr",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxUserId` ON `cache_qa2`(`userId`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxUserId",
+			"bucket": "cache_qa2"
+		},
+		{
+			"definition": "CREATE INDEX `idxUserbyEmail` ON `concourse_qa`(`email`) WHERE (`_type` = \"user\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxUserbyEmail",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idxWorkstream` ON `concourse_qa`(`engagementId`,`title`,`memberUserIds`,`modifiedOn`) WHERE (`_type` = \"workstream\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idxWorkstream",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idx_action_lookupactionImpact` ON `concourse_qa`(`lookupActionStatus`,`audit` DESC,`title`,`lookupActionImpact`,`targetDate`,`openedDate`,`ownerUserId`,`workstreamId`,`engagementId`) WHERE (`_type` = \"action\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idx_action_lookupactionImpact",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idx_decision_lookupactionImpact` ON `concourse_qa`(`lookupDecisionStatus`,`audit` DESC,`title`,`lookupDecisionImpact`,`targetDate`,`openedDate`,`ownerUserId`,`workstreamId`,`engagementId`) WHERE (`_type` = \"decision\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idx_decision_lookupactionImpact",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `idx_engid_type` ON `concourse_qa`(`engagementId`) WHERE (`_type` = \"raidOrder\") WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "idx_engid_type",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `temp_engId` ON `concourse_qa`(`engagementId`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "temp_engId",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `temp_idxSchemas` ON `concourse_qa`((meta().`id`)) WHERE (((meta().`id`) like \"schema%\") or ((meta().`id`) = \"definitionLookup\")) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "temp_idxSchemas",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE INDEX `temp_type` ON `concourse_qa`(`_type`) WITH {  \"defer_build\":true, \"num_replica\":1 }",
+			"name": "temp_type",
+			"bucket": "concourse_qa"
+		}
+	]
+}

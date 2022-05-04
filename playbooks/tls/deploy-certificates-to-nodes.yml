@@ -1,0 +1,24 @@
+#prepare to deploy certificates to your couchbase cluster
+---
+  - hosts: master-host:other-hosts
+    become: true
+
+    tasks:
+
+      - name: Make the required inbox directory for the certificates on each hosts
+        shell:
+          cmd: mkdir -p /opt/couchbase/var/lib/couchbase/inbox/
+
+      - name: Loop over all nodes in the inventor file and start the copy process
+        include_tasks: copy-certificates.yml
+        loop: "{{hostvars[inventory_hostname].groups.all}}"
+
+      - name: Upload Root Cert
+        shell:
+          cmd: curl -X POST --data-binary "@./ca.pem" http://Administrator:password@{{hostvars[inventory_hostname].groups['master-host'][0]}}:8091/controller/uploadClusterCA
+        delegate_to: localhost
+
+
+      - name: Loop over all nodes in the inventor file and start reloading the individual node certificates
+        include_tasks: reload-node-certificates.yml
+        loop: "{{hostvars[inventory_hostname].groups.all}}"

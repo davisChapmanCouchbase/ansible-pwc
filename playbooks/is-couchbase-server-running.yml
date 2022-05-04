@@ -1,0 +1,10 @@
+#Verify Couchbase started
+---
+- hosts: all
+  become: true
+  tasks:
+      - name: Check if Couchbase Server started
+        shell: systemctl  status couchbase-server |grep -i active
+        register: command_output
+      - debug:
+           var: command_output.stdout_lines

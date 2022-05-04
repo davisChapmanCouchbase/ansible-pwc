@@ -1,0 +1,26 @@
+#create the indexes in the cluster
+---
+  - hosts: master-host
+    become: true
+
+  - name: Read in list of indexes to create
+    hosts: localhost
+    vars:
+      input: "{{ lookup('file','{{playbook_dir}}/../cbas.json') | from_json }}"
+
+    tasks:
+      - name: Create index list
+        set_fact: 
+          datasets: "{{ input.datasets }}"
+      
+      - name: Play to loop over datasets and define all datasets
+        include_tasks: includes/cbas-tasks.yml
+        loop: "{{datasets}}"
+
+      - name: Create link list
+        set_fact: 
+          links: "{{ input.link }}"
+      
+      - name: Play to loop over links and create all links
+        include_tasks: includes/cbas-tasks.yml
+        loop: "{{links}}"

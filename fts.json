@@ -1,0 +1,9 @@
+{
+	"fts": [
+		{
+			"definition": "concourse-search-qa.fts",
+			"bucket": "cache_qa2",
+			"name": "concourse-search-qa"
+		}
+	]
+}

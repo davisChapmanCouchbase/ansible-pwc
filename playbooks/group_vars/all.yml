@@ -1,0 +1,113 @@
+#global variables that are accessible by all playbooks
+---
+  operating_system:
+    update_packages: true
+    ping_nodes: true
+    ntp_server:
+      install: true
+      time_zone: America/New_York
+      ntp_host: pool.ntp.org
+  couchbase_version:
+    build: couchbase-server-enterprise-6.6.3-amzn2.x86_64.rpm
+    url: https://packages.couchbase.com/releases/6.6.3/couchbase-server-enterprise-6.6.3-amzn2.x86_64.rpm
+    dest_dir: /tmp
+  couchbase_cluster:
+    name: My Cluster
+    index_storage: plasma
+    memory_quota:
+      data: 102400
+      index: 102400
+      search: 10240
+      analytics: 102400
+      eventing: 10240
+    security:
+      admin_user: Administrator
+      admin_pwd: password
+      port: 8091
+      http_protocol: http
+      query_port: 8093
+      search_port: 8094
+      cbas_port: 8095
+      eventing_port: 8096
+    paths:
+      data: /opt/couchbase/var/lib/couchbase/data
+      index: /opt/couchbase/var/lib/couchbase/index
+      analytics: /opt/couchbase/var/lib/couchbase/analytics
+      eventing: /opt/couchbase/var/lib/couchbase/eventing
+    auto_failover:
+      enabled: true
+      timeout: 120
+    buckets:
+      - name: archive_qa
+        type: membase
+        mem_quota: 2048
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: audit_logs_qa
+        type: membase
+        mem_quota: 1024
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: cache_qa2
+        type: membase
+        mem_quota: 4096
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: concourse_qa
+        type: membase
+        mem_quota: 40980
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: event_metadata
+        type: membase
+        mem_quota: 4096
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+
+      - name: notifications_qa
+        type: membase
+        mem_quota: 1024
+        replicas: 1
+        compression_mode: passive
+        flush_enabled: 0
+        threads: 3
+        num_replicas: 1
+        eviction_policy: valueOnly
+        conflict_resolution: lww
+    kernel_tuning:
+      is_enabled: true
+      disable_THP: true
+      vm_swappiness: 1
+      ulimits: true
+      network_and_memory: true
+  certificates:
+    ca_name: PwC CA

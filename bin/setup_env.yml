@@ -1,0 +1,76 @@
+#this configures the environment via the init.yml playbook
+---
+  - hosts: localhost
+    gather_facts: true
+    tasks:
+
+      - name: Check to see if ansible.cfg exists in location -> "{{ansible_config_value}}"
+        stat:
+          path: "{{ansible_config_value}}/ansible.cfg"
+        register: ansible_file_exists
+
+      - name: Get the current system time in epoch format
+        command: date +%s
+        register: linux_epoch
+        when: ansible_file_exists.stat.exists
+
+      - name: If ansible.cfg already exists, create a backup of the original file.
+        ansible.builtin.copy:
+          src: "{{ansible_config_value}}/ansible.cfg"
+          dest: "{{ansible_config_value}}/ansible.cfg.bak-{{linux_epoch.stdout}}"
+          mode: "0644"
+        when: ansible_file_exists.stat.exists
+
+      - name: Create new ansible.cfg file in specified directory
+        ansible.builtin.file:
+          path: "{{ansible_config_value}}/ansible.cfg"
+          state: touch
+
+      - name: Open ansible.cfg file and create the content
+        copy:
+          dest: "{{ansible_config_value}}/ansible.cfg"
+          content: |
+            # ansible.cfg created by ansible-couchbase-installer
+            [defaults]
+            inventory = {{inventory_file_path_value}}/inventory
+            remote_user = {{ssh_user_name}}
+            private_key_file = {{ssh_key_file_path}}
+            host_key_checking = False
+            retry_files_enabled = False
+      - name: Create Inventory File
+        ansible.builtin.file:
+          path: "{{inventory_file_path_value}}/inventory"
+          state: touch
+      - name: Modify Inventory file with default configuration
+        copy:
+          dest: "{{inventory_file_path_value}}/inventory"
+          content: |
+            #this is the default inventory file
+            #master-host will be the first node you add to the Couchbase cluster. This node must implement the data service(e.g. kv). Other services can also be co-located, but kv must exist for this node
+            [master-host]
+            host1.acme.com services=kv,fts,eventing
+
+            #other-hosts are all of the other Couchbase nodes in your cluster(do not include the master-host in this list).You can have services as needed. Each respective hosts has a services host variable in-line with the host name.
+            #you can add/remove services as needed from the services host variables.
+            [other-hosts]
+            host2.acme.com services=kv,fts,eventing
+            host3.acme.com services=kv,fts,eventing
+            host4.acme.com    services=n1ql,index
+            host5.acme.com    services=n1ql,index
+            host6.acme.com    services=cbas
+
+            #query-host is the node to run all n1ql query commands on for creating indexes
+            [query-host]
+            host4.acme.com
+
+            #search-host is the node to run all fts index commands on for creating indexes
+            [search-host]
+            host1.acme.com
+
+            #eventing-host is the node to run all fts index commands on for creating indexes
+            [eventing-host]
+            host1.acme.com
+
+            #cbas-host is the node to run all cbas commands on for creating datasets
+            [cbas-host]
+            host6.acme.com

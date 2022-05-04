@@ -1,0 +1,62 @@
+#set up the first data node in the cluster
+#reference documentation for cluster config -> https://docs.couchbase.com/server/current/rest-api/rest-node-provisioning.html
+#reference documentation for bucket config -> https://docs.couchbase.com/server/current/rest-api/rest-bucket-create.html
+#refernce documentation for auto-failover settings -> https://docs.couchbase.com/server/current/rest-api/rest-cluster-autofailover-enable.html
+#reference documentation for index storage mode -> https://docs.couchbase.com/server/current/rest-api/post-settings-indexes.html
+---
+
+      - name: set node name
+        set_fact:
+          node: "{{hostvars[inventory_hostname].inventory_hostname}}"
+
+      - name: yet another fact
+        set_fact:
+          base_uri: "{{couchbase_cluster.security.http_protocol}}://{{node}}:{{couchbase_cluster.security.port}}"
+
+      - name: set services for this node
+        set_fact:
+          services: "{{hostvars[inventory_hostname].services}}"
+      - name: Initialize First Node In Cluster
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST \
+          "{{base_uri}}"/nodes/self/controller/settings \
+          -d 'path={{couchbase_cluster.paths.data}}&' \
+          -d 'index_path={{couchbase_cluster.paths.index}}&' \
+          -d 'cbas_path={{couchbase_cluster.paths.analytics}}&' \
+          -d 'eventing_path={{couchbase_cluster.paths.eventing}}&'
+      - name: Rename Node using host name
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/node/controller/rename \
+          -d 'hostname={{node}}'
+      - name: Set up Requested Services
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/node/controller/setupServices \
+          -d 'services={{ services }}'
+      - name: Set Up Memory Quotas for cluster
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default \
+          -d 'memoryQuota={{couchbase_cluster.memory_quota.data}}' \
+          -d 'indexMemoryQuota={{couchbase_cluster.memory_quota.index}}' \
+          -d 'ftsMemoryQuota={{couchbase_cluster.memory_quota.search}}' \
+          -d 'eventingMemoryQuota={{couchbase_cluster.memory_quota.eventing}}' \
+          -d 'cbasMemoryQuota={{couchbase_cluster.memory_quota.analytics}}'
+      - name: Set up Administrator Credentials
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/settings/web \
+          -d 'password={{couchbase_cluster.security.admin_pwd}}&username={{couchbase_cluster.security.admin_user}}&port={{couchbase_cluster.security.port}}'
+
+      - name: Create the Cluster Name
+        command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" -v -X POST "{{base_uri}}"/pools/default \
+          -d clusterName="{{couchbase_cluster.name}}"
+      - name: Configure Auto-Failover
+        command: >-
+          curl -i -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" "{{base_uri}}"/settings/autoFailover \
+          -d 'enabled={{couchbase_cluster.auto_failover.enabled}}&timeout=30'
+
+      - name: Configure Index Storage Mode
+        command: >-
+          curl -v -X POST -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" \
+          "{{base_uri}}"/settings/indexes \
+          -d logLevel=info \
+          -d storageMode={{couchbase_cluster.index_storage}} \

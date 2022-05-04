@@ -1,0 +1,15 @@
+# this is an included file in the initialization of the couchbase cluster
+# this file is included within a "loop", so pay close attention to the variabled name {{item}} in this play. It is created by the calling play and used here 
+---      
+
+    - name: Create Index Definition for  - "{{item.name}}" 
+      command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" --silent \
+          --data-urlencode 'statement={{item.definition}} ' \
+          "{{couchbase_cluster.security.http_protocol}}://{{hostvars[inventory_hostname].groups['query-host'][0]}}:{{couchbase_cluster.security.query_port}}"/query/service
+
+    - name: Build Index - "{{item.name}}" 
+      command: >-
+          curl  -u "{{couchbase_cluster.security.admin_user}}":"{{couchbase_cluster.security.admin_pwd}}" --silent \
+          --data-urlencode 'statement=BUILD INDEX ON {{item.bucket}}({{item.name}}) ' \
+          "{{couchbase_cluster.security.http_protocol}}://{{hostvars[inventory_hostname].groups['query-host'][0]}}:{{couchbase_cluster.security.query_port}}"/query/service

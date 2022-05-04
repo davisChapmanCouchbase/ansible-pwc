@@ -1,0 +1,9 @@
+#set up first  data node in the cluster
+---
+  - hosts: master-host
+    become: true
+
+    tasks:
+      - name: Initialize First Data node in cluster via ansible loop
+        include_tasks: includes/initialize-first-node-in-cluster.yml
+

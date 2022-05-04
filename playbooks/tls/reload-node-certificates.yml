@@ -1,0 +1,6 @@
+#reload node certificates on each node
+---
+
+      - name: Reload the node certificates
+        shell:
+          cmd: curl -X POST http://Administrator:password@{{item}}:8091/node/controller/reloadCertificate

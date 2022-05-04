@@ -1,0 +1,51 @@
+#this playbook will initialize your ansible environment
+---
+  - hosts: localhost
+    become: true
+    gather_facts: no
+    pre_tasks:
+      - pause:
+          prompt: "Would you like to begin the initialization process?[yes/no]"
+        register: init_value
+      - set_fact:
+          initialize_couchbase_env: "{{init_value.user_input}}"
+      - pause:
+          prompt: "Enter the full path to your ansible.cfg file(e.g. /path/to/file)."
+        register: config_file_value
+      - set_fact:
+          ansible_config_value: "{{config_file_value.user_input}}"
+      - pause:
+          prompt: "Enter the full path to your inventory file?(e.g. /path/to/file_name)" 
+        register: inventory_file_value
+      - set_fact:
+          inventory_file_path_value: "{{inventory_file_value.user_input}}"
+      - pause:
+          prompt: "Enter your SSH user name for your Couchbase Cluster(e.g. ec2-user)"
+        register: ssh_user_value
+      - set_fact:
+          ssh_user_name: "{{ssh_user_value.user_input}}"
+      - pause:
+          prompt: "Enter the full path and name of your SSH key(e.g. /path/to/my/sshKey.pem)"
+        register: ssh_key_path_value
+      - set_fact:
+          ssh_key_file_path: "{{ssh_key_path_value.user_input}}"
+
+
+    tasks:
+      # - name: Begin Initialization Response
+      # debug:
+      #   msg: "{{ init_value.user_input }}"
+      #- name:  ansible.cfg file path
+      # debug:
+      #   msg: "{{ config_file_value.user_input }}"
+      # - name: inventory file path
+      # debug: 
+      #   msg: "{{inventory_file_value.user_input}}"
+      #- name: SSH User Name
+      # debug:
+      #   msg: "{{ssh_user_value.user_input}}"
+      #- name: SSH .pem file path
+      # debug:
+      #   msg: "{{ssh_key_path_value.user_input}}"
+  - name: process environment configuation
+    import_playbook: setup_env.yml

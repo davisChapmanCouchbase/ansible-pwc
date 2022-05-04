@@ -1,0 +1,41 @@
+#this playbook installs an NTP server on your host
+---
+  - hosts: all
+    become: true
+    vars:
+      ntp_server: "{{operating_system.ntp_server.ntp_host}}"
+      should_install: "{{operating_system.ntp_server.install}}"
+    tasks:
+
+      - name: Set Timezone
+        shell: timedatectl set-timezone "{{operating_system.ntp_server.time_zone}}"
+        when: should_install == true
+
+      - name: Install NTP
+        yum:
+          name: ntp
+          state: latest
+        when: should_install == true
+
+      - name: Install ntpdate utility
+        yum:
+          name: ntpdate
+          state: latest
+        when: should_install == true  
+
+      - name: Make sure NTP is stopped
+        command: service ntpd stop
+        when: should_install == true
+
+      - name: Sync the time initially
+        shell: ntpdate "{{ntp_server}}"
+        when: should_install == true
+
+      - name: Start NTP server
+        command: service ntpd start
+        when: should_install == true
+
+      - name: Sync hwclock
+        shell: hwclock -w
+        when: should_install == true
+

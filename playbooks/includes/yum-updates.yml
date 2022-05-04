@@ -1,0 +1,6 @@
+# this playbook implements the yum package manager to update the operating system packages
+---  
+  - name: Update Yum Packages
+    yum: 
+      name: "*"
+      state: latest

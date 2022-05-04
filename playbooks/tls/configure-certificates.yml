@@ -1,0 +1,83 @@
+# set up self-signed certificates
+# this playbook only sets up self-signed Root and node certificates.
+# if you need to use and external CA or protect your cluster using Root, Intermediate and Node certificates, you can customize these plays to your needs.
+# Documentation can be found here -> https://docs.couchbase.com/server/6.6/manage/manage-security/configure-server-certificates.html
+---
+  - hosts: localhost
+    become: true
+    tasks:
+
+      - name: include main variables file
+        include_vars: "{{playbook_dir}}/../group_vars/all.yml"
+        
+      - name: check to see if openssl is installed
+        shell: openssl version
+        delegate_to: localhost
+        register: open_ssl_version
+
+
+      - name: show open ssl version
+        debug:
+          msg: "{{open_ssl_version.stdout}}"
+        delegate_to: localhost
+
+      - name: Create working directories
+        shell: |
+           mkdir servercertfiles
+           cd servercertfiles
+           mkdir -p {public,private,requests}
+        delegate_to: localhost
+
+      - name: Create private key for the Couchbase cluster
+        shell: |
+          openssl genrsa -out ca.key 2048
+        delegate_to: localhost
+
+      - name: Create Self-Signed cluster certificate files
+        shell: |
+          openssl req -new -x509 -days 3065 -sha256 -key ca.key -out ca.pem -subj "/CA={{certificates.ca_name}}/CN={{certificates.ca_name}}"
+        delegate_to: localhost
+
+      - name: get the public key information
+        shell: |
+          openssl x509 -in ./ca.pem -noout -pubkey
+        register: pub_key
+        delegate_to: localhost
+
+      - name: Display public key for sanity check
+        debug:
+          msg: "{{pub_key.stdout_lines}}"
+        delegate_to: localhost
+
+      - name: Create the node private key for each inventory host and write the output to the path specified
+        shell: |
+          openssl genrsa -out servercertfiles/private/"{{item}}.key" 2048
+        loop: "{{hostvars[inventory_hostname].groups.all}}"
+
+      - name: Create Certificate Signing Reques(CSR).
+        shell: |
+          openssl req -new -key servercertfiles/private/"{{item}}.key" \
+          -out servercertfiles/requests/"{{item}}.csr" \
+          -subj "/CN={{item}}"
+        loop: "{{hostvars[inventory_hostname].groups.all}}"
+
+      - name: Create customized certificate extensions file to add per node constraints to the certificate
+        shell: |
+          touch "{{item}}.ext.tmp"
+          echo "subjectAltName = DNS:{{item}}" > "{{item}}.ext.tmp"
+        loop: "{{hostvars[inventory_hostname].groups.all}}"
+
+
+      - name: Create the node certificate applying the customized extensions file(e.g. hostName.ext.tmp)
+        shell: |
+          openssl x509 -CA ca.pem -CAkey ca.key -CAcreateserial -days 3065 -req \
+          -in servercertfiles/requests/"{{item}}.csr" \
+          -out servercertfiles/public/"{{item}}.pem" \
+          -extfile "{{item}}.ext.tmp"
+        loop: "{{hostvars[inventory_hostname].groups.all}}"
+        register: node_cert_output
+
+      - name: Confirm output for node certificate
+        debug:
+          msg: "{{item.stderr_lines}}"
+        loop: "{{node_cert_output.results}}"

@@ -1,0 +1,12 @@
+{
+    "functions": [
+    {
+    "name": "engagement_stats_qa2",
+    "definition": "engagement_stats_qa2.json"
+    },
+    {
+    "name": "sesssion_update_qa2",
+    "definition": "sesssion_update_qa2.json"
+    }
+    ]
+    }

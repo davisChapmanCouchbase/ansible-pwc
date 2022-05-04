@@ -1,0 +1,18 @@
+#create the indexes in the cluster
+---
+  - hosts: master-host
+    become: true
+
+  - name: Read in list of fts indexes to create
+    hosts: localhost
+    vars:
+      input: "{{ lookup('file','{{playbook_dir}}/../fts.json') | from_json }}"
+
+    tasks:
+      - name: Create fts index list
+        set_fact: 
+          indexes: "{{ input.fts }}"
+      
+      - name: Play to loop over fts indexes and define all indexes
+        include_tasks: includes/fts-tasks.yml
+        loop: "{{indexes}}"

@@ -1,0 +1,10 @@
+#download couchbase package
+---
+  - hosts: all
+    become: true
+    tasks:
+      - name: Download Couchbase Server Enterprise Edition
+        get_url:
+          url:  "{{couchbase_version.url}}"
+          dest: "{{couchbase_version.dest_dir}}" 
+          

@@ -1,0 +1,18 @@
+#create the indexes in the cluster
+---
+  - hosts: master-host
+    become: true
+
+  - name: Read in list of indexes to create
+    hosts: localhost
+    vars:
+      input: "{{ lookup('file','{{playbook_dir}}/../indexes.json') | from_json }}"
+
+    tasks:
+      - name: Create index list
+        set_fact: 
+          indexes: "{{ input.indexes }}"
+      
+      - name: Play to loop over indexes and define all indexes
+        include_tasks: includes/index-tasks.yml
+        loop: "{{indexes}}"

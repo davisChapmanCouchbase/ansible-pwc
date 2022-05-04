@@ -1,0 +1,149 @@
+# this is an include file and is referenced from a wrapping play outside of this directory
+#configure linux tunings
+---
+      - name: Get the current Linux keep-alive value
+        shell: "cat /proc/sys/net/ipv4/tcp_keepalive_time"
+        register: catoutput
+      - debug: msg={{catoutput.stdout_lines[0]}}
+
+      - name: Set new keep-alive value
+        shell: echo 30 > /proc/sys/net/ipv4/tcp_keepalive_time
+
+      - name: Get the new keep-alive value
+        shell: "cat /proc/sys/net/ipv4/tcp_keepalive_time"
+        register: newcatoutput
+      - debug: msg={{newcatoutput.stdout_lines[0]}}
+
+      - name: Set the keep-alive probes
+        shell: echo 5 > /proc/sys/net/ipv4/tcp_keepalive_probes
+
+      - name: Set reuse of TIME-WAIT sockets
+        shell: echo 1 > /proc/sys/net/ipv4/tcp_tw_reuse
+
+      - name: Increase the tcp-time-wait buckets pool size to prevent DDoS attacks
+        shell: echo 1440000 > /proc/sys/net/ipv4/tcp_max_tw_buckets
+
+      - name: Configure vm.swappiness so that kernal only swaps as a last resort
+        shell: echo "{{couchbase_cluster.kernel_tuning.vm_swappiness}}" > /proc/sys/vm/swappiness
+
+      - name: Configure vm.swappines to survive a reboot operation(part 1)
+        shell: echo "" >> /etc/sysctl.conf
+      - name: Configure vm.swappines to survive a reboot operation(part 2)
+        shell: echo "#Set swappiness to {{couchbase_cluster.kernel_tuning.vm_swappiness}} to avoid swapping" >> /etc/sysctl.conf
+      - name: Configure vm.swappines to survive a reboot operation(part 3)
+        shell: echo "vm.swappiness = {{couchbase_cluster.kernel_tuning.vm_swappiness}}" >> /etc/sysctl.conf
+
+      - name: Set ip_local_port_range parameters
+        shell: echo "32768 60999" >/proc/sys/net/ipv4/ip_local_port_range
+      - name: Configure ip_local_port_range parameters to survive a reboot operation
+        shell: echo "net.ipv4.ip_local_port_range = 32768 60999" >> /etc/sysctl.conf
+
+      - name: Set the keep-alive interval
+        shell: echo 15 > /proc/sys/net/ipv4/tcp_keepalive_intvl
+
+      - name: Set number of reserved free pages in proportion to their size
+        shell: echo 524288 > /proc/sys/vm/min_free_kbytes
+
+      - name: Limit the max memory used to 2GB before pdflush is involved
+        shell: echo 2147483648 > /proc/sys/vm/dirty_bytes
+
+      - name: Set background kernel flusher for dirty bytes
+        shell: echo 1073741824 > /proc/sys/vm/dirty_background_bytes
+
+      - name: Increase the rate at which data is flushed to disk(Part 1)
+        shell: echo 300 > /proc/sys/vm/dirty_expire_centisecs
+
+      - name: Increase the rate at which data is flushed to disk(Part 2)
+        shell: echo 100 > /proc/sys/vm/dirty_writeback_centisecs
+
+      - name: Increase the size of file handles and inode cache
+        shell: echo "2097152" > /proc/sys/fs/file-max
+
+      - name: Force the file handles to survive a reboot(Part 1)
+        shell: echo "" >> /etc/sysctl.conf
+      - name: Force the file handles to survive a reboot (Part 2)
+        shell: echo "#Set fs.file-max to 2097152" >> /etc/sysctl.conf
+      - name: Force the file handles to survue a reboot(Part 3)
+        shell: echo "fs.file-max = 2097152" >> /etc/sysctl.conf
+
+      - name: Disable NUMA zone reclaim algorithm. This tends to decrease read latencies
+        shell: echo 0 > /proc/sys/vm/zone_reclaim_mode
+
+      - name: Run the sysctl -p command to apply all changes from this playbook
+        shell: sysctl -p
+
+      - name: Set User Limits(Part 1)
+        shell: echo "" >> /etc/security/limits.conf
+      - name: Set User Limits (Part 2)
+        shell: echo "#Set User Limits to increase available file descriptors for Couchbase and ensure core dumps can be created" >> /etc/security/limits.conf
+      - name: Set User Limits(Part 3)
+        shell: echo "couchbase soft nofile 131072" >> /etc/security/limits.conf
+      - name: Set User Limits (Part 4)
+        shell: echo "couchbase hard nofile 131072" >> /etc/security/limits.conf
+      - name: Set User Limits (Part 5)
+        shell: echo "couchbase hard core unlimited" >> /etc/security/limits.conf
+
+      - name: Create disable-thp file to prepare for execution
+        ansible.builtin.file:
+          path: /etc/init.d/disable-thp
+          state: touch
+
+      - name: Create content for disable THP script
+        copy:
+          dest: /etc/init.d/disable-thp
+          content: |
+            #!/bin/bash
+            ### BEGIN INIT INFO
+            # Provides:          disable-thp
+            # Required-Start:    $local_fs
+            # Required-Stop:
+            # X-Start-Before:    couchbase-server
+            # Default-Start:     2 3 4 5
+            # Default-Stop:      0 1 6
+            # Short-Description: Disable THP
+            # Description:       Disables transparent huge pages (THP) on boot, to improve
+            #                    Couchbase performance.
+            ### END INIT INFO
+
+            case $1 in
+              start)
+                if [ -d /sys/kernel/mm/transparent_hugepage ]; then
+                  thp_path=/sys/kernel/mm/transparent_hugepage
+                elif [ -d /sys/kernel/mm/redhat_transparent_hugepage ]; then
+                  thp_path=/sys/kernel/mm/redhat_transparent_hugepage
+                else
+                  return 0
+                fi
+
+                echo 'never' > ${thp_path}/enabled
+                echo 'never' > ${thp_path}/defrag
+
+                re='^[0-1]+$'
+                if [[ $(cat ${thp_path}/khugepaged/defrag) =~ $re ]]
+                then
+                  # RHEL 7
+                  echo 0  > ${thp_path}/khugepaged/defrag
+                else
+                  # RHEL 6
+                  echo 'no' > ${thp_path}/khugepaged/defrag
+                fi
+
+                unset re
+                unset thp_path
+                ;;
+            esac
+
+      - name: Make the THP script executable
+        shell: sudo chmod 755 /etc/init.d/disable-thp
+
+      - name: Configure OS to run the script at boot-time
+        shell: sudo chkconfig --add disable-thp      
+
+      - name: Configure Packet Steering for virtualized envionments
+        shell: echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus
+      - name: Configure Packet Steering to survive reboots
+        shell: echo "" >> /etc/rc.local
+      - name: Configure Packet Steering for virtualized envionments(Part 2)
+        shell: echo "#Set Packet Steering to execute at boot-time" >> /etc/rc.local
+      - name: Configure Packet Steering for virtualized envionments(Part 3)
+        shell: echo "sudo echo f > /sys/class/net/eth0/queues/rx-0/rps_cpus" >> /etc/rc.local

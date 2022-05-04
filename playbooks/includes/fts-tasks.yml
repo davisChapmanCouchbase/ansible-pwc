@@ -1,0 +1,16 @@
+# this is an included file in the initialization of the couchbase cluster
+# this file is included within a "loop", so pay close attention to the variabled name {{item}} in this play. It is created by the calling play and used here 
+---      
+
+    - name: FTS index name
+      debug:
+        msg: "{{item.name}}"
+
+    - name: FTS index definition
+      debug:
+        msg: "{{item.definition}}"
+
+    - name: Echo command into a shell script for - "{{item.name}}"
+      command: >-
+          python3 "{{playbook_dir}}"/../fts.py  -u "{{couchbase_cluster.security.admin_user}}" -p "{{couchbase_cluster.security.admin_pwd}}" \
+          -n "{{hostvars[inventory_hostname].groups['search-host'][0]}}" -f "{{playbook_dir}}"/../fts.json

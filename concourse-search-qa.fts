@@ -1,0 +1,403 @@
+{
+	"sourceType": "couchbase",
+	"sourceName": "cache_qa2",
+	"planParams": {
+		"maxPartitionsPerPIndex": 171,
+		"indexPartitions": 6
+	},
+	"sourceParams": {
+	},
+	"name": "concourse-search-qa",
+	"params": {
+		"doc_config": {
+			"docid_regexp": "",
+			"mode": "type_field",
+			"docid_prefix_delim": "",
+			"type_field": "_type"
+		},
+		"mapping": {
+			"default_analyzer": "standard",
+			"default_datetime_parser": "dateTimeOptional",
+			"default_mapping": {
+				"dynamic": true,
+				"enabled": false
+			},
+			"index_dynamic": true,
+			"default_type": "_default",
+			"store_dynamic": false,
+			"analysis": {
+			},
+			"default_field": "_all",
+			"type_field": "_type",
+			"types": {
+				"archetypeActionCache": {
+					"dynamic": true,
+					"enabled": true,
+					"properties": {
+						"name": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "name",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"sortingName": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"type": "text",
+									"docvalues": true,
+									"analyzer": "keyword",
+									"name": "namesortby"
+								}
+							]
+						},
+						"archetypeId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "archetypeId",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"actionType": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "actionType",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"intSolId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "intSolId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"path": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"type": "text",
+									"docvalues": true,
+									"store": true,
+									"name": "path"
+								}
+							]
+						}
+					}
+				},
+				"archetypeStageCache": {
+					"dynamic": true,
+					"enabled": true,
+					"properties": {
+						"intSolSortingName": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "intSolSortingName",
+									"include_term_vectors": true,
+									"analyzer": "keyword",
+									"docvalues": true,
+									"type": "text"
+								}
+							]
+						},
+						"archetypeSortingName": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "archetypeSortingName",
+									"include_term_vectors": true,
+									"analyzer": "keyword",
+									"docvalues": true,
+									"type": "text"
+								}
+							]
+						},
+						"archetypeId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "archetypeId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"stageId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "stageId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"intSolId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "intSolId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"name": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "name",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						}
+					}
+				},
+				"engagementActionCache": {
+					"dynamic": true,
+					"enabled": true,
+					"properties": {
+						"name": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "name",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"sortingName": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"type": "text",
+									"docvalues": true,
+									"analyzer": "keyword",
+									"name": "namesortby"
+								}
+							]
+						},
+						"archetypeIds": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "archetypeIds",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"actionType": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "actionType",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"engagementId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "engagementId",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"intSolId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "intSolId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"path": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"type": "text",
+									"docvalues": true,
+									"store": true,
+									"name": "path"
+								}
+							]
+						}
+					}
+				},
+				"archetypeCache": {
+					"dynamic": true,
+					"enabled": true,
+					"properties": {
+						"intSolId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "intSolId",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"description": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "description",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						},
+						"archetypeId": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "archetypeId",
+									"type": "text",
+									"analyzer": "keyword",
+									"docvalues": true,
+									"include_term_vectors": true,
+									"store": true
+								}
+							]
+						},
+						"sortingName": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"type": "text",
+									"docvalues": true,
+									"analyzer": "keyword",
+									"name": "namesortby"
+								}
+							]
+						},
+						"name": {
+							"dynamic": false,
+							"enabled": true,
+							"fields": [
+								{
+									"index": true,
+									"name": "name",
+									"include_term_vectors": true,
+									"docvalues": true,
+									"type": "text",
+									"store": true
+								}
+							]
+						}
+					}
+				}
+			},
+			"docvalues_dynamic": true
+		},
+		"store": {
+			"indexType": "scorch"
+		}
+	},
+	"type": "fulltext-index",
+	"uuid": ""
+}

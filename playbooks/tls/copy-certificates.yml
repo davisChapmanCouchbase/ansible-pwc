@@ -1,0 +1,12 @@
+#copy plays to move the certs to each node in the cluster
+---
+
+     - name: Copy the chain files
+       ansible.builtin.copy:
+         src: servercertfiles/public/{{ansible_host}}.pem
+         dest: /opt/couchbase/var/lib/couchbase/inbox/chain.pem
+
+     - name: Copy the key files
+       ansible.builtin.copy:
+         src: servercertfiles/private/{{ansible_host}}.key
+         dest: /opt/couchbase/var/lib/couchbase/inbox/pkey.key

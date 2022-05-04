@@ -1,0 +1,25 @@
+{
+	"datasets": [
+		{
+			"definition": "CREATE DATASET adminData ON concourse_qa WHERE `_type` IN ['accelerator','automation','template','intSol','archetype'];",
+			"name": "adminData",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE DATASET workspaceData ON concourse_qa WHERE `_type` IN ['engagement','engagementAccelerator','engagementAutomation','engagementTemplate','userEngagement','workstream'];",
+			"name": "workspaceData",
+			"bucket": "concourse_qa"
+		},
+		{
+			"definition": "CREATE DATASET systemData ON concourse_qa WHERE `_type` IN ['user'];",
+			"name": "systemData",
+			"bucket": "concourse_qa"
+		}
+    ],
+    "link": [
+        {
+            "definition": "CONNECT LINK Local;",
+            "name": "local"
+        }
+    ]
+}
